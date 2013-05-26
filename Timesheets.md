@@ -14,6 +14,7 @@ Timesheet can be included in XHTML or HTML documents:
 * [W3C Timesheets std](http://www.w3.org/TR/timesheets/)
 * [Timesheets engine FI](https://mediatech.aalto.fi/~pv/timesheets/)
 * [Timesheet.js at InriAlpes.fr](http://wam.inrialpes.fr/timesheets/)
+[![DocEng 2011: Timesheets - When SMIL Meets HTML5 and CSS3](http://img.youtube.com/vi/VKxDB4NHWdQ/0.jpg)](http://www.youtube.com/watch?v=VKxDB4NHWdQ)
 * [DocEng 2011: Timesheets - When SMIL Meets HTML5 and CSS3](http://www.youtube.com/watch?v=VKxDB4NHWdQ)
 * [MarkDown Cheetsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#wiki-code)
 
