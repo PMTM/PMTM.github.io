@@ -40,12 +40,15 @@ slides that are displayed for 5 seconds each. After that time next slide is disp
 Though the above example is pretty simple it can be futher simplified.
 Such demand could justified by deriving the display order just from order inside
 the original document (HTML/XHTML) thus swapping of two slides does not require
-change of any label or modification of timesheet item elemets. On the other hand
-when using __#name-id__ style selectors the change of order within slides is 
+change of any label or modification of timesheet item elemets.
+
+On the other hand when using __#name-id__ style selectors the change of order within slides is 
 controlled just by the timesheet list. Anyway managing more complex sequences and
 media synchronization, i.e. multilevel setups like slide and sub-slide animations
 or interactions, would still require use of __#name-id__ (which is __id__ atribute
-of particular element). After all literal the most siplified slideshow can look like this:
+of particular element).
+
+After all the most siplified slideshow can look like this:
 
 ```xml
 <timesheet>
@@ -82,6 +85,41 @@ slide bullets are shown one after the other in 1 second intervals.
 </timesheet>
 ```
 
+If you are control freak, then id references gives you untimate control over the presentation.
+
+```xml
+<timesheet>
+      <seq>
+            <item select="#Slide1" dur="7s">
+                  <seq>
+                        <item select="#Bullet1_1" dur="1s" /> 
+                        <item select="#Bullet1_2" dur="1s" /> 
+                        <item select="#Bullet1_3" dur="1s" /> 
+                        <item select="#Bullet1_4" dur="1s" /> 
+                  </seq>
+            </item>
+            ...
+      </seq>
+</timesheet>
+```
+
+As you can see the two above mentioned way to describe in slide animations (aka ___selections___)
+is exclusive by definition (__seq__ displays each it's item after other = show first, hide first, show next, ...).
+For slide purpose we usually need to keep items visible while displaying next.
+
+Voila here it is.
+
+```xml
+<timesheet>
+      <par>
+            <item select=".Bullet" beginInc="3s" />
+      <par>
+</timesheet>
+```
+
+Well as you can see it is a bit cheating and fast forward to __par__.
+So please hold on to the next section.
+
 So far everything was driven by the time. Which is good for non-interactive presentation
 while interactive sessions like _lecture_ like sessions might require more controls then this.
 
@@ -112,7 +150,8 @@ After all you can add home and end buttons, but still hanving strict order.
 When we raise demand for having out of order slide selection then the element __seq__
 becomes too limiting with it's strict order.
 For that we need actually a little bit more than __seq__ element.
-That element is __excl__ which is short from exclusive.
+
+The element that gives us the power is __excl__ (short from exclusive).
 In fact is was derived from another element __par__ (short for parallel).
 Let us first start with that element because for use case described above we need
 also the thumbnail index which has to loaded at once.
@@ -149,6 +188,18 @@ Longer but you can be more specific.
             <item select="#Thumbnail4" />
             <item select="#Thumbnail5" />
       </par>
+</timesheet>
+```
+
+Comming back to slide bullets show.
+
+```xml
+<timesheet>
+      <par>
+            <item select=".Bullet" beginInc="3s">
+                  <set select=".Bullet" attributeName="color" to="rgb(0,0,255)" dur="1s" />
+            <item>
+      <par>
 </timesheet>
 ```
 
