@@ -111,9 +111,14 @@ Voila here it is.
 
 ```xml
 <timesheet>
-      <par>
-            <item select=".Bullet" beginInc="3s" />
-      <par>
+      <seq>
+            <item select="#Slide1" dur="7s">
+                  <par>
+                        <item select=".Bullet" beginInc="3s" />
+                  </par>
+            </item>
+            ...
+      </seq>
 </timesheet>
 ```
 
