@@ -14,6 +14,7 @@ Timesheet can be included in XHTML or HTML documents:
 * [W3C Timesheets std](http://www.w3.org/TR/timesheets/)
 * [Timesheets engine FI](https://mediatech.aalto.fi/~pv/timesheets/)
 * [Timesheet.js at InriAlpes.fr](http://wam.inrialpes.fr/timesheets/)
+
 [![DocEng 2011: Timesheets - When SMIL Meets HTML5 and CSS3](http://img.youtube.com/vi/VKxDB4NHWdQ/0.jpg)](http://www.youtube.com/watch?v=VKxDB4NHWdQ)
 * [DocEng 2011: Timesheets - When SMIL Meets HTML5 and CSS3](http://www.youtube.com/watch?v=VKxDB4NHWdQ)
 * [MarkDown Cheetsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#wiki-code)
@@ -450,5 +451,41 @@ __Excl__ element ensures that large pictures are displayed exclusively.
       <item select="#Thumbnail5" />
     </par>
   </par>
+</timesheet>
+```
+
+Inline timesheet
+
+```xml
+<div id="slide05"
+     smil:timeContainer="par"> 
+
+  <h2> Incremental Display with <seq></seq> </h2>
+
+  <ul smil:timeContainer="seq" smil:next="slide05.click">
+    <li smil:fill="hold"> Click on this slide </li>
+    <li smil:fill="hold"> and the list items  </li>
+    <li smil:fill="hold"> will appear         </li>
+    <li smil:fill="hold"> one after another.  </li>
+  </ul>
+
+  <p smil:begin="0:10">
+    (you still have to click the "next" button
+     to get the next slide)
+  </p>
+
+</div>
+```
+
+Out of the band timesheet
+
+```xml
+<timesheet>
+      <seq next="slide05.click">
+            <item select="#Bullet1_1" fill="hold" />
+            <item select="#Bullet1_2" fill="hold" />
+            <item select="#Bullet1_3" fill="hold" />
+            <item select="#Bullet1_4" fill="hold" />
+      </seq>
 </timesheet>
 ```
