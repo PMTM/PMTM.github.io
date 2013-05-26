@@ -11,7 +11,12 @@ Timesheet can be included in XHTML or HTML documents:
 * HTML : via link - cannot be inlined only external
 * XHTML : via namespace (xmlns) - can be inlined or external
 
-http://www.w3.org/TR/timesheets/#smilTimesheetsNS-Elements-Timesheet
+* [W3C Timesheets std](http://www.w3.org/TR/timesheets/)
+* [Timesheets engine FI](https://mediatech.aalto.fi/~pv/timesheets/)
+* [Timesheet.js at InriAlpes.fr](http://wam.inrialpes.fr/timesheets/)
+* [DocEng 2011: Timesheets - When SMIL Meets HTML5 and CSS3](http://www.youtube.com/watch?v=VKxDB4NHWdQ)
+* [MarkDown Cheetsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#wiki-code)
+
 
 # Elements of the language
 
@@ -122,7 +127,7 @@ Voila here it is.
 </timesheet>
 ```
 
-Well as you can see it is a bit cheating and fast forward to __par__.
+Well as you can see it is a bit of _cheating_ and fast forward to __par__ element.
 So please hold on to the next section.
 
 So far everything was driven by the time. Which is good for non-interactive presentation
@@ -158,9 +163,10 @@ For that we need actually a little bit more than __seq__ element.
 
 The element that gives us the power is __excl__ (short from exclusive).
 In fact is was derived from another element __par__ (short for parallel).
-Let us first start with that element because for use case described above we need
-also the thumbnail index which has to loaded at once.
-Thus __par__ is the appropriate element here.
+Let us first start with __par__ element because for our use case  we need
+also the thumbnail index which has to loaded at once. Later on we will add
+the __excl__ element to display only the necessary slide when it's thumbnail
+is clicked.
 
 ### par
 
@@ -181,7 +187,7 @@ The actual code below simply loads all thumbnails at once
 </timesheet>
 ```
 
-Certainly the same could be also achieved by __#name-id__ (__id__ attribute value) reference.
+Certainly the same could be also achieved by __#name-id__ (refering to __id__ attribute value) reference.
 Longer but you can be more specific.
 
 ```xml
@@ -196,17 +202,27 @@ Longer but you can be more specific.
 </timesheet>
 ```
 
-Comming back to slide bullets show.
+Comming back to slide bullets showing one after the other but keeping the previous visible.
+The example below actually does that as well as highliting bullet for a certain period of time (1s).
 
 ```xml
 <timesheet>
-      <par>
-            <item select=".Bullet" beginInc="3s">
-                  <set select=".Bullet" attributeName="color" to="rgb(0,0,255)" dur="1s" />
-            <item>
-      <par>
+      <seq> <!-- Slide sequence -->
+            <item select="#Slide1" dur="7s"> <!-- individual slide -->
+                  <par> <!-- all items on a single slide -->
+                        <item select=".Bullet" beginInc="3s"> <!-- item on a slide here a bullet(s) -->
+                              <set select=".Bullet" attributeName="color" to="rgb(0,0,255)" dur="1s" />
+                              <!-- shat to do with individual bullet -->
+                        <item>
+                  <par>
+            </item>
+            ...
+      </seq>
 </timesheet>
 ```
+
+You can see one new element __set__ which is used for animation efect, actually here changing color.
+
 
 ### excl
 
@@ -227,6 +243,140 @@ Thumbnail and main view, where
 </timesheet>
 ```
 
+### item
+
+This is original document reference.
+
+#### select
+
+__Select__ is actually the refernce that this item operates on.
+When __item__ element is about to be displayed engine actually request the rendering engine to
+render that particular element usually __div__.
+
+#### beginInc
+
+When __select__ attribute matches multiple elements then this attribute shifts the __begin__ time
+of each matching element by its value.
+
+```xml
+<timesheet>
+      <par>
+            <item select=".Bullet" beginInc="1s" />
+      </par>
+</timesheet>
+```
+
+In practise, the above example is equal to:
+
+```xml
+<timesheet>
+      <par>
+            <item select="#Bullet1_1" begin="0s" />
+            <item select="#Bullet1_2" begin="1s" />
+            <item select="#Bullet1_3" begin="2s" />
+            <item select="#Bullet1_4" begin="3s" />
+      </par>
+</timesheet>
+```
+
+Assuming that there are just __#Bullet1_1__, __#Bullet1_2__, __#Bullet1_3__ and __#Bullet1_4__.
+
+Or the same applied to __seq__ element:
+
+```xml
+<timesheet>
+      <seq>
+            <item select=".Bullet" beginInc="1s" />
+      </seq>
+</timesheet>
+```
+
+Again expands into:
+
+```xml
+<timesheet>
+      <seq>
+            <item select="#Bullet1_1" begin="0s" />
+            <item select="#Bullet1_2" begin="1s" />
+            <item select="#Bullet1_3" begin="2s" />
+            <item select="#Bullet1_4" begin="3s" />
+      </seq>
+</timesheet>
+```
+
+The only difference is how rendering engine is reuested to display items/elements.
+In __par__ case all the items are displayed at the same time (reflowing as necessary).
+While in __seq__ case items are displayed one by one exclusively.
+
+## Attributes
+
+__Attributes__ present in __item__ elements instruct the engine to sync with time.
+
+### begin
+
+Defines when particular item should start in __seq__ or __par__ container.
+
+### dur
+
+Obviously duration for how long the item shall be visible.
+
+### end
+
+Complimentary to the ___begin___ and ___dur___, defines when the item ends it selection
+again in __seq__ or __par__ (for __par__ the end does not make much sense because the duration
+of whole __par__ is defined by the last active element thus only when this value
+is the last time value in whole __par__).
+
+### fill
+
+Extends the current element beyond the active duration by freezing the final state of the element.
+Depends on media used, mostly applies only to the video element.
+
+### endSync
+
+Sets the explicit end of this element is synchronizes to the other element end.
+
+endSync = ( "first" | "last" | "all" | "media" | Id-value | SMIL-1-Id-value )
+
+* first - when the first sub-element ends
+* last - when the last sub-element ends
+* all - when all sub-elememts has ended, indefinite sub-element keeps this element from finishing
+* media - when linked media ends
+* Id-value - particular sub-element
+* SMILL-1-Id-Value - ...
+
+### repeatCount
+
+How many times shall the container be repeated.
+
+### repeatDur
+
+For how long the container shall keep running
+
+The following attributes are used to control use of envents and is applicable only for __excl__ element.
+All of them are events (click, keypress, ...).
+
+### first
+### prev
+### next
+### last
+
+## Animation
+
+Used for driving changes on screen, style: color, position, transparency.
+Can be also done by javascript or CSS (1,2 or 3) transformations including 3D.
+
+### animate
+### set
+### animateColor
+### animateMotion
+
+# Advanced example #
+
+This is an example shows synchronization with external media (audion).
+
+The first listing is the SMIL Timesheet:
+
 ```xml
 <timesheet xmlns="http://www.w3.org/ns/SMIL">
   <excl dur="2:51" mediaSync="#talk">
@@ -242,23 +392,18 @@ Thumbnail and main view, where
 </timesheet>
 ```
 
-```html
-<audio id="talk">
-    <source type="audio/mp3" src="data/git-pre-commit.mp3" />
-    <source type="audio/mp4" src="data/git-pre-commit.m4a" />
-    <source type="audio/ogg" src="data/git-pre-commit.ogg" />
-</audio>
-```
+Actual element in HTML that refers to audio that is played and the presentation is
+synchronized to it.
 
 ```html
+...
 <audio id="talk" autoplay preload>
     <source type="audio/mp3" src="data/git-pre-commit.mp3" />
     <source type="audio/mp4" src="data/git-pre-commit.m4a" />
     <source type="audio/ogg" src="data/git-pre-commit.ogg" />
 </audio>
+...
 ```
-
-
 
 
 ```xml
