@@ -489,3 +489,41 @@ Out of the band timesheet
       </seq>
 </timesheet>
 ```
+
+```xml
+<div id="slide07" smil:timeContainer="par"> 
+  <h2> Outlines with event-values </h2>
+  <ul smil:timeContainer="par" smil:timeAction="class:active"
+      class="outline">
+    <li smil:begin="mouseover" smil:begin="mouseout"> hover me
+      <ul>
+        <li> this item is collapsed by default </li>
+        <li> this item is expanded when active </li>
+      </ul>
+    </li>
+    <li smil:begin="click" smil:end="click"> click me
+      <ul> […] </ul>
+    </li>
+    <li smil:begin="click" smil:end="click"> click me
+      <ul class="expand">
+        <li> this item is expanded by default   </li>
+        <li> this item is collapsed when active </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+```
+
+```xml
+<timesheet>
+      <par>
+            <item select="#slide07">
+                  <par>
+                        <item select="#bulet_7_1" begin="mouseover" end="mouseout" />
+                        <item select="#bulet_7_2" begin="click" end="click" />
+                        <item select="#bulet_7_3" begin="click" end="click" />
+                  </par>
+            </item>
+      </par>
+</timesheet>
+```
