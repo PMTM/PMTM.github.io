@@ -37,6 +37,16 @@ slides that are displayed for 5 seconds each. After that time next slide is disp
 </timesheet>
 ```
 
+Though the above example is pretty simple it can be futher simplified.
+Such demand could justified by deriving the display order just from order inside
+the original document (HTML/XHTML) thus swapping of two slides does not require
+change of any label or modification of timesheet item elemets. On the other hand
+when using __#name-id__ style selectors the change of order within slides is 
+controlled just by the timesheet list. Anyway managing more complex sequences and
+media synchronization, i.e. multilevel setups like slide and sub-slide animations
+or interactions, would still require use of __#name-id__ (which is __id__ atribute
+of particular element). After all literal the most siplified slideshow can look like this:
+
 ```xml
 <timesheet>
       <seq>
@@ -44,6 +54,11 @@ slides that are displayed for 5 seconds each. After that time next slide is disp
       </seq>
 </timesheet>
 ```
+
+Comming back to multilevel synchronization which is realized in this case by __seq__
+embedded within __item__ of another __seq__ documents the hierarchy.
+The below shown example will display each slide for 7 seconds and within the individual
+slide bullets are shown one after the other in 1 second intervals.
 
 ```xml
 <timesheet>
@@ -67,6 +82,42 @@ slides that are displayed for 5 seconds each. After that time next slide is disp
 </timesheet>
 ```
 
+So far everything was driven by the time. Which is good for non-interactive presentation
+while interactive sessions like _lecture_ like sessions might require more controls then this.
+
+Let us imagine with simple click to next.
+
+This is the simpliest way to make presentation driven by left and right arrow.
+Using this you are unable to select random slide. The only thing you can do is to traverse
+the presentation in natural order forth and back.
+
+```xml
+<timesheet>
+      <seq prev="accesskey(Left)" next="accesskey(Right)">
+            <item select=".Slide" />
+      </seq>
+</timesheet>
+```
+
+After all you can add home and end buttons, but still hanving strict order.
+
+```xml
+<timesheet>
+      <seq first="accesskey(Home)" prev="accesskey(Left)" next="accesskey(Right)" last="accesskey(End)">
+            <item select=".Slide" />
+      </seq>
+</timesheet>
+```
+
+When we raise demand for having out of order slide selection then the element __seq__
+becomes too limiting with it's strict order.
+For that we need actually a little bit more than __seq__ element.
+That element is __excl__ which is short from exclusive.
+In fact is was derived from another element __par__ (short for parallel).
+Let us first start with that element because for use case described above we need
+also the thumbnail index which has to loaded at once.
+Thus __par__ is the appropriate element here.
+
 ### par
 
 Element __par__ defines a simple time grouping in which multiple elements can play at the same time.
@@ -75,7 +126,50 @@ the __par__ becomes active. The whole element default duration is defined as ___
 it is long as the longest child element in par
 (Cite: _The implicit duration ends with the last active end of the child elements._).
 
+The actual code below simply loads all thumbnails at once
+(selector __.Thumbnail__ is a CSS class that refers to all its instances).
+
+```xml
+<timesheet>
+      <par>
+            <item select=".Thumbnail" />
+      </par>
+</timesheet>
+```
+
+Certainly the same could be also achieved by __#name-id__ (__id__ attribute value) reference.
+Longer but you can be more specific.
+
+```xml
+<timesheet>
+      <par>
+            <item select="#Thumbnail1" />
+            <item select="#Thumbnail2" />
+            <item select="#Thumbnail3" />
+            <item select="#Thumbnail4" />
+            <item select="#Thumbnail5" />
+      </par>
+</timesheet>
+```
+
 ### excl
+
+This elements is used for loading
+
+Thumbnail and main view, where 
+
+```xml
+<timesheet>
+      <par>
+            <excl>
+                  <item select=".Image" indexStart="1" begin="index(Thumbnail).click" />
+            </excl>
+            <par>
+                  <item select=".Thumbnail" />
+            </par>
+      </par>
+</timesheet>
+```
 
 ```xml
 <timesheet xmlns="http://www.w3.org/ns/SMIL">
@@ -107,6 +201,9 @@ it is long as the longest child element in par
     <source type="audio/ogg" src="data/git-pre-commit.ogg" />
 </audio>
 ```
+
+
+
 
 ```xml
 <timesheet xmlns="http://www.w3.org/ns/SMIL">
