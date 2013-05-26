@@ -104,7 +104,7 @@ If you are control freak, then id references gives you untimate control over the
 ```
 
 As you can see the two above mentioned way to describe in slide animations (aka ___selections___)
-is exclusive by definition (__seq__ displays each it's item after other = show first, hide first, show next, ...).
+is exclusive by definition (element __seq__ displays each it's item after other = show first, hide first, show next, ...).
 For slide purpose we usually need to keep items visible while displaying next.
 
 Voila here it is.
